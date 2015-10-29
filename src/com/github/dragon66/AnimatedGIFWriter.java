@@ -6,6 +6,15 @@
  * http://www.eclipse.org/legal/epl-v10.html
  * 
  * Any modifications to this file must keep this entire header intact.
+ * 
+ * Change History - most recent changes go on top of previous changes
+ *
+ * AnimatedGIFWriter.java
+ *
+ * Who   Date       Description
+ * ====  =========  =================================================
+ * WY    29Oct2015  Crop image if outside of logical screen
+ * WY    28Oct2015  Initial creation
  */
 
 package com.github.dragon66;
@@ -535,7 +544,7 @@ public class AnimatedGIFWriter {
 		}
 		if((frameLeft + imageWidth) > logicalScreenWidth) imageWidth = logicalScreenWidth - frameLeft;
 		if((frameTop + imageHeight) > logicalScreenHeight) imageHeight = logicalScreenHeight - frameTop;
-		int[] pixels = getRGB(image);
+		int[] pixels = getRGB(image.getSubimage(0, 0, imageWidth, imageHeight));
 		// Handle transparency color if explicitly set
     	if(frame.getTransparencyFlag() == GIFFrame.TRANSPARENCY_INDEX_SET && frame.getTransparentColor() != -1) {
 			int transColor = (frame.getTransparentColor() & 0x00ffffff);				
@@ -566,7 +575,7 @@ public class AnimatedGIFWriter {
 		if(delay <= 0) delay = 100;
 		if(imageWidth > logicalScreenWidth) imageWidth = logicalScreenWidth;
 		if(imageHeight > logicalScreenHeight) imageHeight = logicalScreenHeight;
-		writeFrame(getRGB(frame), imageWidth, imageHeight, 0, 0, delay, os);
+		writeFrame(getRGB(frame.getSubimage(0, 0, imageWidth, imageHeight)), imageWidth, imageHeight, 0, 0, delay, os);
     }
 
 	private void writeFrame(int[] pixels, int imageWidth, int imageHeight, int imageLeftPosition, int imageTopPosition, int delay, int disposalMethod, int userInputFlag, OutputStream os) throws Exception {	
