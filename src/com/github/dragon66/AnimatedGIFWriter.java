@@ -535,6 +535,7 @@ public class AnimatedGIFWriter {
 		int imageHeight = image.getHeight();
 		int frameLeft = frame.getLeftPosition();
 		int frameTop = frame.getTopPosition();
+		if(frameLeft >= logicalScreenWidth || frameTop >= logicalScreenHeight) return;
 		// Determine the logical screen dimension
 		if(firstFrame) {
 			if(logicalScreenWidth <= 0)
