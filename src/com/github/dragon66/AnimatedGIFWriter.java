@@ -35,7 +35,7 @@ public class AnimatedGIFWriter {
 	private int codeIndex;
 	private int clearCode;
 	private int endOfImage;
-	private int bufIndex = 0;	
+	private int bufIndex;	
 	private int empty_bits = 0x08;
 	
 	private int bitsPerPixel = 0x08;
@@ -70,7 +70,7 @@ public class AnimatedGIFWriter {
 	public static final byte COMMENT_EXTENSION_LABEL = (byte)0xfe;
 	public static final byte TEXT_EXTENSION_LABEL = 0x01;	
 
-	private static int MASK[] = {0x00, 0x01, 0x03, 0x07, 0x0f, 0x1f, 0x3f, 0x7f, 0xff};
+	private static final int MASK[] = {0x00, 0x01, 0x03, 0x07, 0x0f, 0x1f, 0x3f, 0x7f, 0xff};
 		
 	private static Dimension getLogicalScreenSize(BufferedImage[] images) {
 		// Determine the logical screen dimension assuming all the frames have the same
@@ -535,7 +535,6 @@ public class AnimatedGIFWriter {
 		int imageHeight = image.getHeight();
 		int frameLeft = frame.getLeftPosition();
 		int frameTop = frame.getTopPosition();
-		if(frameLeft >= logicalScreenWidth || frameTop >= logicalScreenHeight) return;
 		// Determine the logical screen dimension
 		if(firstFrame) {
 			if(logicalScreenWidth <= 0)
@@ -543,6 +542,7 @@ public class AnimatedGIFWriter {
 			if(logicalScreenHeight <= 0)
 				logicalScreenHeight = imageHeight;
 		}
+		if(frameLeft >= logicalScreenWidth || frameTop >= logicalScreenHeight) return;
 		if((frameLeft + imageWidth) > logicalScreenWidth) imageWidth = logicalScreenWidth - frameLeft;
 		if((frameTop + imageHeight) > logicalScreenHeight) imageHeight = logicalScreenHeight - frameTop;
 		int[] pixels = getRGB(image.getSubimage(0, 0, imageWidth, imageHeight));
@@ -754,7 +754,7 @@ public class AnimatedGIFWriter {
 	    os.write(colors, 0, num_of_color*3);
 	}
     
-    public static int[] checkColorDepth(int[] rgbTriplets, byte[] newPixels, final int[] colorPalette) {
+    private static int[] checkColorDepth(int[] rgbTriplets, byte[] newPixels, final int[] colorPalette) {
 		int index = 0;
 		int temp = 0;
 		int bitsPerPixel = 1;
